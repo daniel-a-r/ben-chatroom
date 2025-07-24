@@ -27,7 +27,8 @@ export default defineConfig([
     ],
     languageOptions: { globals: globals.browser },
     rules: {
-      'no-unused-vars': [
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^ignore' },
       ],
