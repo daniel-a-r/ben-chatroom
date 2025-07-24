@@ -1,10 +1,27 @@
+import axios from 'axios';
+import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 const Login = () => {
-  const login = () => {
-    console.log('login button pressed');
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const login = async (formData: FormData) => {
+    console.log('formData: ', formData);
+    const body = { password: formData.get('password') };
+    try {
+      const repsonse = await axios.post('http://localhost:3000/login', body);
+      console.log(repsonse.data);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.error(error.response?.data.message);
+        // console.log(error.response);
+      } else {
+        console.error('something went wrong');
+        console.error(error);
+      }
+    }
   };
 
   return (
