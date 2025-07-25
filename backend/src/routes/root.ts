@@ -26,23 +26,28 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
             properties: {
               message: { type: 'string' },
               user: { type: 'string' },
+              token: { type: 'string' },
             },
           },
         },
       },
     },
     (request: FastifyRequest<{ Body: LoginBody }>, reply: FastifyReply) => {
-      console.log('login endpoint reached');
       const { password } = request.body;
-      let user: string = '';
-      if (password === 'shannon') {
-        user = 'shannon';
-      } else if (password === 'kat') {
-        user = 'kat';
-      } else {
-        return reply.code(400).send({ message: 'Invalid password' });
+
+      if (password === 'shannon' || password === 'kat') {
+        console.log('password:', password);
+        const user = password;
+        const token = fastify.jwt.sign({ user });
+        const body = {
+          message: 'login successful',
+          user,
+          token
+        }
+        return reply.send(body);
       }
-      return reply.send({ message: 'login successful', user });
+
+      return reply.code(400).send({ message: 'Invalid password' });
     },
   );
 };
