@@ -1,11 +1,23 @@
+import { useEffect, useState } from 'react';
 import Login from '@/components/Login';
-// import Chat from '@/components/Chat';
+import Chat from '@/components/Chat';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
   return (
     <>
-      <Login />
-      {/* <Chat /> */}
+      {isLoggedIn ? (
+        <Chat setIsLoggedIn={setIsLoggedIn} />
+      ) : (
+        <Login setIsLoggedIn={setIsLoggedIn} />
+      )}
     </>
   );
 }
