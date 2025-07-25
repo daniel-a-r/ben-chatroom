@@ -64,5 +64,8 @@ test/types/index.js
 # compiled app
 dist
 
-# private keys
+# prisma
+/src/generated/prisma
+
+# env key
 .env.keys
