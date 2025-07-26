@@ -1,9 +1,8 @@
 import fp from 'fastify-plugin';
-import jwt, { FastifyJWTOptions } from '@fastify/jwt';
+import jwt, { FastifyJWT } from '@fastify/jwt';
 
-export default fp<FastifyJWTOptions>(async (fastify) => {
+export default fp<FastifyJWT>(async (fastify) => {
   fastify.register(jwt, {
-    // TODO: setup docker for env variables
-    secret: 'secret',
+    secret: process.env.JWT_SECRET,
   });
 });
