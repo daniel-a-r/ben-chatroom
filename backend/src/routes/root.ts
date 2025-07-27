@@ -38,7 +38,11 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
       if (password === 'shannon' || password === 'kat') {
         console.log('password:', password);
         const user = password;
-        const token = fastify.jwt.sign({ user });
+        const payload = {
+          user,
+          test: 'hello',
+        };
+        const token = fastify.jwt.sign(payload);
         const body = {
           message: 'login successful',
           user,
@@ -51,10 +55,12 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
     },
   );
 
-  fastify.get('/chat', { websocket: true }, (socket, _request) => {
+  fastify.get('/chat', { websocket: true }, (socket, request) => {
     const { clients } = fastify.websocketServer;
+    console.log(request.query);
 
     socket.on('message', (message) => {
+      console.log(message.toString());
       // broadcast to all clients except self
       for (const client of clients) {
         if (client !== socket) {
