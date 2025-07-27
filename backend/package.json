@@ -3,13 +3,6 @@
   "version": "1.0.0",
   "description": "This project was bootstrapped with Fastify-CLI.",
   "main": "src/app.ts",
-  "type": "module",
-  "imports": {
-    "#/*": {
-      "default": "./src/*",
-      "production": "./dist/*"
-    }
-  },
   "scripts": {
     "test": "pnpm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register \"test/**/*.ts\"",
     "start": "pnpm run build:ts && fastify start -l info dist/app.js",

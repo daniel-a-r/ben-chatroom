@@ -42,8 +42,8 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
         const body = {
           message: 'login successful',
           user,
-          token,
-        };
+          token
+        }
         return reply.send(body);
       }
 

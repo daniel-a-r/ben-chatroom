@@ -1,18 +1,36 @@
-import Fastify from 'fastify';
-import jwt from '#/plugins/jwt';
-import sensible from '#/plugins/sensible';
-import root from '#/routes/root';
+import { join } from 'node:path';
+import AutoLoad, { AutoloadPluginOptions } from '@fastify/autoload';
+import { FastifyPluginAsync, FastifyServerOptions } from 'fastify';
 
-const fastify = Fastify();
+export interface AppOptions
+  extends FastifyServerOptions,
+    Partial<AutoloadPluginOptions> {}
+// Pass --options via CLI arguments in command to enable these options.
+const options: AppOptions = {};
 
-fastify.register(jwt);
-fastify.register(sensible);
-fastify.register(root);
+const app: FastifyPluginAsync<AppOptions> = async (
+  fastify,
+  opts,
+): Promise<void> => {
+  // Place here your custom code!
 
-// Run the server!
-try {
-  await fastify.listen({ port: process.env.PORT });
-} catch (err) {
-  fastify.log.error(err);
-  process.exit(1);
-}
+  // Do not touch the following lines
+
+  // This loads all plugins defined in plugins
+  // those should be support plugins that are reused
+  // through your application
+  void fastify.register(AutoLoad, {
+    dir: join(__dirname, 'plugins'),
+    options: opts,
+  });
+
+  // This loads all plugins defined in routes
+  // define your routes in one of these
+  void fastify.register(AutoLoad, {
+    dir: join(__dirname, 'routes'),
+    options: opts,
+  });
+};
+
+export default app;
+export { app, options };
