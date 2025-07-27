@@ -62,10 +62,7 @@ examples/typescript-server.js
 test/types/index.js
 
 # compiled app
-dist
-
-# prisma
-/src/generated/prisma
+dist/
 
 # env key
 .env.keys

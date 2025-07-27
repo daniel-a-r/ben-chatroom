@@ -42,14 +42,27 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
         const body = {
           message: 'login successful',
           user,
-          token
-        }
+          token,
+        };
         return reply.send(body);
       }
 
       return reply.code(400).send({ message: 'Invalid password' });
     },
   );
+
+  fastify.get('/chat', { websocket: true }, (socket, _request) => {
+    const { clients } = fastify.websocketServer;
+
+    socket.on('message', (message) => {
+      // broadcast to all clients except self
+      for (const client of clients) {
+        if (client !== socket) {
+          client.send(message.toString());
+        }
+      }
+    });
+  });
 };
 
 export default root;

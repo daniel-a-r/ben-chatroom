@@ -3,7 +3,6 @@ import jwt, { FastifyJWTOptions } from '@fastify/jwt';
 
 export default fp<FastifyJWTOptions>(async (fastify) => {
   fastify.register(jwt, {
-    // TODO: setup docker for env variables
     secret: process.env.JWT_SECRET,
   });
 });
