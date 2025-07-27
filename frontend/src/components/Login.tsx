@@ -9,7 +9,7 @@ interface LoginProps {
 }
 
 const Login = ({ setIsLoggedIn }: LoginProps) => {
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const login = async (formData: FormData) => {
     console.log('formData: ', formData);
