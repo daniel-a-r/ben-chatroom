@@ -14,7 +14,14 @@ interface ChatProps {
 }
 
 const Chat = ({ setIsLoggedIn }: ChatProps) => {
-  const { sendMessage, lastMessage } = useWebSocket('ws://localhost:3000/chat');
+  const { sendMessage, lastMessage } = useWebSocket(
+    'ws://localhost:3000/chat',
+    {
+      queryParams: {
+        user: String(localStorage.getItem('token')),
+      },
+    },
+  );
   const [messageHistory, setMessageHistory] = useState<string[]>([]);
 
   const logout = () => {
@@ -24,6 +31,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   };
 
   const handleSendMessage = (formData: FormData) => {
+    // const userToken = localStorage.getItem('token');
     const message = String(formData.get('message'));
     sendMessage(message);
   };
