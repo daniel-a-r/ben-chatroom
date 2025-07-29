@@ -1,4 +1,4 @@
-import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyPluginAsync, FastifyRequest } from 'fastify';
 import { LoginBody, TokenQuery, TokenPayload } from '../types';
 
 const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
