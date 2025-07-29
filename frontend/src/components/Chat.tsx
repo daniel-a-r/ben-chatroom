@@ -1,4 +1,10 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
+import {
+  useEffect,
+  useState,
+  type ChangeEvent,
+  type Dispatch,
+  type SetStateAction,
+} from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import useWebSocket from 'react-use-websocket';
@@ -57,6 +63,10 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     }
   };
 
+  const handleInputChange = (e: ChangeEvent) => {
+    console.log(e.target.nodeValue);
+  };
+
   useEffect(() => {
     console.log(lastMessage);
     if (lastMessage !== null) {
@@ -89,7 +99,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
         Logout
       </Button>
       <form action={handleSendMessage}>
-        <Input name='message' />
+        <Input name='message' onChange={handleInputChange} />
         <Button>Send Message</Button>
       </form>
       {messageHistory.map((message) => (

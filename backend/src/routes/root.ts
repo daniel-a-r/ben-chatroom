@@ -88,6 +88,7 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
       socket.on('message', async (message) => {
         const { token } = request.query;
         const { name } = fastify.jwt.verify<TokenPayload>(token);
+        console.log(message.toString());
 
         const { content, id } = await prisma.message.create({
           data: {
