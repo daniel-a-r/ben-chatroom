@@ -17,7 +17,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
     try {
       const response = await axios.post('http://localhost:3000/login', body);
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', response.data.user);
+      localStorage.setItem('user', response.data.name);
       setIsLoggedIn(true);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -33,7 +33,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
   return (
     <form
       action={login}
-      className='mx-auto grid h-full max-w-lg content-center gap-3 px-6 md:grid-cols-[min-content_auto]'
+      className='grid content-center gap-3 px-6 md:grid-cols-[min-content_auto]'
     >
       <Label htmlFor='password' className='text-lg'>
         Password:

@@ -5,6 +5,7 @@ import pluginReact from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import pluginQuery from '@tanstack/eslint-plugin-query';
 import { defineConfig } from 'eslint/config';
 
 export default defineConfig([
@@ -24,6 +25,7 @@ export default defineConfig([
       pluginReact.configs.flat['jsx-runtime'],
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
+      pluginQuery.configs['flat/recommended'],
     ],
     languageOptions: { globals: globals.browser },
     rules: {

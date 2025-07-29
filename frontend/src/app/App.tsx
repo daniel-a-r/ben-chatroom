@@ -12,13 +12,13 @@ function App() {
   }, []);
 
   return (
-    <>
+    <div className='mx-auto grid h-full max-w-lg'>
       {isLoggedIn ? (
         <Chat setIsLoggedIn={setIsLoggedIn} />
       ) : (
         <Login setIsLoggedIn={setIsLoggedIn} />
       )}
-    </>
+    </div>
   );
 }
 
