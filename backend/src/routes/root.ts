@@ -58,15 +58,15 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
       const { name } = request.user;
       const messages = await prisma.message.findMany({
         orderBy: {
-          createdAt: 'asc'
-        }
+          createdAt: 'asc',
+        },
       });
 
       const messagesNameHidden = messages.map((message) => {
         return {
           ...message,
-          user: (message.user === name) ? "me" : "user",
-        }
+          user: message.user === name ? 'me' : 'user',
+        };
       });
 
       reply.send(messagesNameHidden);
