@@ -1,8 +1,5 @@
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
-
-interface LoginBody {
-  password: string;
-}
+import { LoginBody, TokenQuery, TokenPayload } from '../types';
 
 const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
   fastify.get('/', async function (_request, _reply) {
@@ -25,7 +22,7 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
             type: 'object',
             properties: {
               message: { type: 'string' },
-              user: { type: 'string' },
+              name: { type: 'string' },
               token: { type: 'string' },
             },
           },
@@ -35,17 +32,15 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
     (request: FastifyRequest<{ Body: LoginBody }>, reply: FastifyReply) => {
       const { password } = request.body;
 
-      if (password === 'shannon' || password === 'kat') {
-        console.log('password:', password);
-        const user = password;
+      if (password === 'pass1' || password === 'pass2') {
+        const name = password === 'pass1' ? 'SHANNON' : 'CAT';
         const payload = {
-          user,
-          test: 'hello',
+          name,
         };
         const token = fastify.jwt.sign(payload);
         const body = {
           message: 'login successful',
-          user,
+          name,
           token,
         };
         return reply.send(body);
@@ -55,20 +50,62 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
     },
   );
 
-  fastify.get('/chat', { websocket: true }, (socket, request) => {
-    const { clients } = fastify.websocketServer;
-    console.log(request.query);
-
-    socket.on('message', (message) => {
-      console.log(message.toString());
-      // broadcast to all clients except self
-      for (const client of clients) {
-        if (client !== socket) {
-          client.send(message.toString());
+  fastify.get(
+    '/history',
+    { onRequest: [fastify.authenticate] },
+    async (request, reply) => {
+      const { prisma } = fastify;
+      const { name } = request.user;
+      const messages = await prisma.message.findMany({
+        orderBy: {
+          createdAt: 'asc'
         }
+      });
+
+      const messagesNameHidden = messages.map((message) => {
+        return {
+          ...message,
+          user: (message.user === name) ? "me" : "user",
+        }
+      });
+
+      reply.send(messagesNameHidden);
+    },
+  );
+
+  fastify.get(
+    '/chat',
+    { websocket: true },
+    async (socket, request: FastifyRequest<{ Querystring: TokenQuery }>) => {
+      const { clients } = fastify.websocketServer;
+      const { prisma } = fastify;
+
+      for (const client of clients) {
+        console.log(client.url);
       }
-    });
-  });
+      console.log(socket.url);
+
+      socket.on('message', async (message) => {
+        const { token } = request.query;
+        const { name } = fastify.jwt.verify<TokenPayload>(token);
+
+        const { content, id } = await prisma.message.create({
+          data: {
+            user: name,
+            content: message.toString(),
+          },
+        });
+        // broadcast to all clients except self
+        for (const client of clients) {
+          console.log(client.url);
+          console.log(socket.url);
+          if (client !== socket) {
+            client.send(JSON.stringify({ content, id, user: 'user' }));
+          }
+        }
+      });
+    },
+  );
 };
 
 export default root;

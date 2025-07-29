@@ -2,12 +2,6 @@ import fp from 'fastify-plugin';
 import jwt, { FastifyJWTOptions } from '@fastify/jwt';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
-declare module 'fastify' {
-  interface FastifyInstance {
-    authenticate: any;
-  }
-}
-
 export default fp<FastifyJWTOptions>(async (fastify) => {
   fastify.register(jwt, {
     secret: process.env.JWT_SECRET,
