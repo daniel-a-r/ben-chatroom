@@ -21,6 +21,6 @@ model Message {
 }
 
 enum User {
-  KAT
+  CAT
   SHANNON
 }
