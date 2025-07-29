@@ -24,16 +24,18 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
               message: { type: 'string' },
               name: { type: 'string' },
               token: { type: 'string' },
+              emojiOnly: { type: 'boolean' },
             },
           },
         },
       },
     },
-    (request: FastifyRequest<{ Body: LoginBody }>, reply: FastifyReply) => {
+    (request: FastifyRequest<{ Body: LoginBody }>, reply) => {
       const { password } = request.body;
 
       if (password === 'pass1' || password === 'pass2') {
         const name = password === 'pass1' ? 'SHANNON' : 'CAT';
+        const emojiOnly = password === 'pass2' ? true : false;
         const payload = {
           name,
         };
@@ -42,6 +44,7 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
           message: 'login successful',
           name,
           token,
+          emojiOnly
         };
         return reply.send(body);
       }

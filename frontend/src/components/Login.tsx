@@ -18,6 +18,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
       const response = await axios.post('http://localhost:3000/login', body);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', response.data.name);
+      localStorage.setItem('emojiOnly', response.data.emojiOnly);
       setIsLoggedIn(true);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
