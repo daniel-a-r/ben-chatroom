@@ -19,11 +19,8 @@ import { Card } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
 interface ChatProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -56,10 +53,8 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     },
   );
   const messageRef = useRef<HTMLDivElement>(null);
-  const emojiOnly = localStorage.getItem('emojiOnly') === 'true' ? true : false;
+  const emojiOnly = localStorage.getItem('emojiOnly') === 'true';
   const displayEmojiPicker = emojiOnly && isDesktop && !isMacOs;
-  console.log(emojiOnly);
-  console.log(displayEmojiPicker);
 
   const logout = () => {
     localStorage.clear();
@@ -123,7 +118,9 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
         {displayEmojiPicker && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button className='text-lg' variant='secondary'>Emoji Picker</Button>
+              <Button className='text-lg' variant='secondary'>
+                Emoji Picker
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='start'>
               <EmojiPicker />
@@ -144,7 +141,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
       >
         {messageHistory.map((message) => (
           // {message.user === 'user' && message.user}
-          // eslint-disable-next-line react/jsx-key
           <Card
             key={message.id}
             className={
