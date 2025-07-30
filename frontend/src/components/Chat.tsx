@@ -11,7 +11,7 @@ import axios from 'axios';
 import useWebSocket from 'react-use-websocket';
 import { v4 as uuid } from 'uuid';
 import { Send } from 'lucide-react';
-import EmojiPicker from 'emoji-picker-react';
+import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react';
 import { isDesktop, isMacOs } from 'react-device-detect';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -34,6 +34,7 @@ interface Message {
 
 const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState<string>('');
   const { isPending, isError, isSuccess, data, error } = useQuery({
     queryKey: ['messages'],
     queryFn: () => {
@@ -72,11 +73,19 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
       };
       sendMessage(message);
       setMessageHistory((messageHistory) => [...messageHistory, newMessage]);
+      if (emojiOnly) {
+        setInputValue('');
+      }
     }
   };
 
-  const handleInputChange = (e: ChangeEvent) => {
-    console.log(e.target.nodeValue);
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    setInputValue(e.target.value);
+  };
+
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setInputValue((prev) => prev + emojiData.emoji);
   };
 
   useEffect(() => {
@@ -123,7 +132,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align='start'>
-              <EmojiPicker />
+              <EmojiPicker onEmojiClick={handleEmojiClick} />
             </DropdownMenuContent>
           </DropdownMenu>
         )}
@@ -162,6 +171,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
             name='message'
             onChange={handleInputChange}
             placeholder='Emojis only'
+            value={inputValue}
           />
         ) : (
           <Input name='message' placeholder='Type message' />
