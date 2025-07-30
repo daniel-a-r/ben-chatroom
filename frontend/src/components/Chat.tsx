@@ -12,7 +12,8 @@ import useWebSocket from 'react-use-websocket';
 import { v4 as uuid } from 'uuid';
 import { Send } from 'lucide-react';
 import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react';
-import { isDesktop, isMacOs } from 'react-device-detect';
+import { isDesktop } from 'react-device-detect';
+import emojiRegex from 'emoji-regex-xs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
@@ -55,7 +56,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   );
   const messageRef = useRef<HTMLDivElement>(null);
   const emojiOnly = localStorage.getItem('emojiOnly') === 'true';
-  const displayEmojiPicker = emojiOnly && isDesktop && !isMacOs;
+  const displayEmojiPicker = emojiOnly && isDesktop;
 
   const logout = () => {
     localStorage.clear();
@@ -80,8 +81,9 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    setInputValue(e.target.value);
+    const regex = emojiRegex();
+    setInputValue((e.target.value.match(regex) || []).join(''));
+    // setInputValue(e.target.value);
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
@@ -172,6 +174,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
             onChange={handleInputChange}
             placeholder='Emojis only'
             value={inputValue}
+            className='!text-xl'
           />
         ) : (
           <Input name='message' placeholder='Type message' />

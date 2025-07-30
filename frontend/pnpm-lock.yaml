@@ -35,6 +35,9 @@ importers:
       emoji-picker-react:
         specifier: ^4.13.2
         version: 4.13.2(react@19.1.0)
+      emoji-regex-xs:
+        specifier: ^2.0.1
+        version: 2.0.1
       lucide-react:
         specifier: ^0.525.0
         version: 0.525.0(react@19.1.0)
@@ -1249,6 +1252,10 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       react: '>=16'
+
+  emoji-regex-xs@2.0.1:
+    resolution: {integrity: sha512-1QFuh8l7LqUcKe24LsPUNzjrzJQ7pgRwp1QMcZ5MX6mFplk2zQ08NVCM84++1cveaUUYtcCYHmeFEuNg16sU4g==}
+    engines: {node: '>=10.0.0'}
 
   enhanced-resolve@5.18.2:
     resolution: {integrity: sha512-6Jw4sE1maoRJo3q8MsSIn2onJFbLTOjY9hlx4DZXmOKvLRd1Ok2kXmAGXaafL2+ijsJZ1ClYbl/pmqr9+k4iUQ==}
@@ -3458,6 +3465,8 @@ snapshots:
     dependencies:
       flairup: 1.0.0
       react: 19.1.0
+
+  emoji-regex-xs@2.0.1: {}
 
   enhanced-resolve@5.18.2:
     dependencies:
