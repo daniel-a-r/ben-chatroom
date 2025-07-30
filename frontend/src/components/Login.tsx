@@ -32,10 +32,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
   };
 
   return (
-    <form
-      action={login}
-      className='grid content-center gap-3 px-6 md:grid-cols-[min-content_auto]'
-    >
+    <form action={login} className='grid gap-3 md:grid-cols-[min-content_auto]'>
       <Label htmlFor='password' className='text-lg'>
         Password:
       </Label>

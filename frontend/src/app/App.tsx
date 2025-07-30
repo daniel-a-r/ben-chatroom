@@ -12,7 +12,7 @@ function App() {
   }, []);
 
   return (
-    <div className='mx-auto grid h-full max-w-lg'>
+    <div className='mx-auto h-svh max-w-lg content-center p-6'>
       {isLoggedIn ? (
         <Chat setIsLoggedIn={setIsLoggedIn} />
       ) : (

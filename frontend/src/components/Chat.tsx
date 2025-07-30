@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState,
   type ChangeEvent,
   type Dispatch,
@@ -8,9 +9,21 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import useWebSocket from 'react-use-websocket';
+import { v4 as uuid } from 'uuid';
+import { Send } from 'lucide-react';
+import EmojiPicker from 'emoji-picker-react';
+import { isDesktop, isMacOs } from 'react-device-detect';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { v4 as uuid } from 'uuid';
+import { Card } from '@/components/ui/card';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 interface ChatProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -42,10 +55,14 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
       },
     },
   );
+  const messageRef = useRef<HTMLDivElement>(null);
+  const emojiOnly = localStorage.getItem('emojiOnly') === 'true' ? true : false;
+  const displayEmojiPicker = emojiOnly && isDesktop && !isMacOs;
+  console.log(emojiOnly);
+  console.log(displayEmojiPicker);
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.clear();
     setIsLoggedIn(false);
   };
 
@@ -82,6 +99,15 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     }
   }, [isSuccess, data]);
 
+  useEffect(() => {
+    if (messageRef.current !== null) {
+      messageRef.current.scroll({
+        behavior: 'smooth',
+        top: messageRef.current.scrollHeight,
+      });
+    }
+  }, [messageHistory]);
+
   if (isPending) {
     return <span>Loading...</span>;
   }
@@ -91,22 +117,63 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     return <span>Error!</span>;
   }
 
-  console.log(messageHistory);
-
   return (
-    <div className=''>
-      <Button onClick={logout} className='text-lg'>
-        Logout
-      </Button>
-      <form action={handleSendMessage}>
-        <Input name='message' onChange={handleInputChange} />
-        <Button>Send Message</Button>
+    <div className='grid h-full grid-rows-[min-content_1fr_min-content] gap-4'>
+      <div className='flex'>
+        {displayEmojiPicker && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button className='text-lg' variant='secondary'>Emoji Picker</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align='start'>
+              <EmojiPicker />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+        <Button
+          onClick={logout}
+          className='ml-auto text-lg'
+          variant='secondary'
+        >
+          Logout
+        </Button>
+      </div>
+      <div
+        className='flex h-full flex-col gap-3 overflow-y-auto'
+        ref={messageRef}
+      >
+        {messageHistory.map((message) => (
+          // {message.user === 'user' && message.user}
+          // eslint-disable-next-line react/jsx-key
+          <Card
+            key={message.id}
+            className={
+              message.user === 'me'
+                ? 'max-w-7/10 self-end px-3 py-2'
+                : 'max-w-7/10 self-start px-3 py-2'
+            }
+          >
+            {message.content}
+          </Card>
+        ))}
+      </div>
+      <form
+        action={handleSendMessage}
+        className='grid grid-cols-[1fr_max-content] gap-3'
+      >
+        {emojiOnly ? (
+          <Input
+            name='message'
+            onChange={handleInputChange}
+            placeholder='Emojis only'
+          />
+        ) : (
+          <Input name='message' placeholder='Type message' />
+        )}
+        <Button size='icon'>
+          <Send />
+        </Button>
       </form>
-      {messageHistory.map((message) => (
-        <p key={message.id}>
-          {message.user}: {message.content}
-        </p>
-      ))}
     </div>
   );
 };
