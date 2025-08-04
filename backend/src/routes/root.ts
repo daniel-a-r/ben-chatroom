@@ -83,15 +83,9 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
       const { clients } = fastify.websocketServer;
       const { prisma } = fastify;
 
-      for (const client of clients) {
-        console.log(client.url);
-      }
-      console.log(socket.url);
-
       socket.on('message', async (message) => {
         const { token } = request.query;
         const { name } = fastify.jwt.verify<TokenPayload>(token);
-        console.log(message.toString());
 
         const { content, id } = await prisma.message.create({
           data: {
@@ -101,8 +95,6 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
         });
         // broadcast to all clients except self
         for (const client of clients) {
-          console.log(client.url);
-          console.log(socket.url);
           if (client !== socket) {
             client.send(JSON.stringify({ content, id, user: 'user' }));
           }
