@@ -3,6 +3,7 @@ import { useState, type Dispatch, type SetStateAction } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { httpUrl } from '@/lib/urls';
 
 interface LoginProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -15,7 +16,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
     console.log('formData: ', formData);
     const body = { password: formData.get('password') };
     try {
-      const response = await axios.post('http://localhost:3000/login', body);
+      const response = await axios.post(`${httpUrl}/login`, body);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', response.data.name);
       localStorage.setItem('emojiOnly', response.data.emojiOnly);

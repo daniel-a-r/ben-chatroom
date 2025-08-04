@@ -22,6 +22,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { httpUrl, wsUrl } from '@/lib/urls';
 
 interface ChatProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -39,21 +40,18 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const { isPending, isError, isSuccess, data, error } = useQuery({
     queryKey: ['messages'],
     queryFn: () => {
-      return axios.get('http://localhost:3000/history', {
+      return axios.get(`${httpUrl}/history`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
     },
   });
-  const { sendMessage, lastMessage } = useWebSocket(
-    'ws://localhost:3000/chat',
-    {
-      queryParams: {
-        token: String(localStorage.getItem('token')),
-      },
+  const { sendMessage, lastMessage } = useWebSocket(`${wsUrl}/chat`, {
+    queryParams: {
+      token: String(localStorage.getItem('token')),
     },
-  );
+  });
   const messageRef = useRef<HTMLDivElement>(null);
   const emojiOnly = localStorage.getItem('emojiOnly') === 'true';
   const displayEmojiPicker = emojiOnly && isDesktop;
