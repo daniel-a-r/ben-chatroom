@@ -15,13 +15,13 @@ import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react';
 import { isDesktop } from 'react-device-detect';
 import emojiRegex from 'emoji-regex-xs';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Textarea } from '@/components/ui/textarea';
 import { httpUrl, wsUrl } from '@/lib/urls';
 
 interface ChatProps {
@@ -78,7 +78,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     }
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const regex = emojiRegex();
     setInputValue((e.target.value.match(regex) || []).join(''));
     // setInputValue(e.target.value);
@@ -154,8 +154,8 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
             key={message.id}
             className={
               message.user === 'me'
-                ? 'max-w-7/10 self-end px-3 py-2'
-                : 'max-w-7/10 self-start px-3 py-2'
+                ? 'max-w-7/10 self-end px-3 py-2 wrap-break-word'
+                : 'max-w-7/10 self-start px-3 py-2 wrap-break-word'
             }
           >
             {message.content}
@@ -167,17 +167,23 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
         className='grid grid-cols-[1fr_max-content] gap-3'
       >
         {emojiOnly ? (
-          <Input
+          <Textarea
             name='message'
             onChange={handleInputChange}
             placeholder='Emojis only'
             value={inputValue}
-            className='!text-xl'
+            className='resize-none !text-xl'
+            rows={1}
           />
         ) : (
-          <Input name='message' placeholder='Type message' />
+          <Textarea
+            name='message'
+            placeholder='Type message'
+            className='resize-none'
+            rows={2}
+          />
         )}
-        <Button size='icon'>
+        <Button size='icon' className='self-end'>
           <Send />
         </Button>
       </form>
