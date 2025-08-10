@@ -25,6 +25,7 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
               name: { type: 'string' },
               token: { type: 'string' },
               emojiOnly: { type: 'boolean' },
+              disableInput: { type: 'boolean' },
             },
           },
         },
@@ -32,24 +33,36 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
     },
     (request: FastifyRequest<{ Body: LoginBody }>, reply) => {
       const { password } = request.body;
+      let name: string;
 
-      if (password === 'pass1' || password === 'pass2') {
-        const name = password === 'pass1' ? 'SHANNON' : 'CAT';
-        const emojiOnly = password === 'pass2' ? true : false;
-        const payload = {
-          name,
-        };
-        const token = fastify.jwt.sign(payload);
-        const body = {
-          message: 'login successful',
-          name,
-          token,
-          emojiOnly
-        };
-        return reply.send(body);
+      switch (password) {
+        case 'pass1':
+          name = 'SHANNON';
+          break;
+        case 'pass2':
+          name = 'CAT';
+          break;
+        case 'pass3':
+          name = 'BEN';
+          break;
+        default:
+          return reply.code(400).send({ message: 'Invalid password' });
       }
 
-      return reply.code(400).send({ message: 'Invalid password' });
+      const emojiOnly = name === 'CAT';
+      const disableInput = name === 'BEN';
+      const payload = {
+        name,
+      };
+      const token = fastify.jwt.sign(payload);
+      const body = {
+        message: 'login successful',
+        name,
+        token,
+        emojiOnly,
+        disableInput,
+      };
+      return reply.send(body);
     },
   );
 
@@ -64,6 +77,10 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
           createdAt: 'asc',
         },
       });
+
+      if (name === 'BEN') {
+        return reply.send(messages);
+      }
 
       const messagesNameHidden = messages.map((message) => {
         return {

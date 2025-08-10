@@ -52,8 +52,13 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
       token: String(localStorage.getItem('token')),
     },
   });
+
   const messageRef = useRef<HTMLDivElement>(null);
-  const emojiOnly = localStorage.getItem('emojiOnly') === 'true';
+  const emojiOnly: boolean = JSON.parse(localStorage.getItem('emojiOnly')!);
+  const disableInput: boolean = JSON.parse(
+    localStorage.getItem('disableInput')!,
+  );
+  console.log('disable input:', disableInput);
   const displayEmojiPicker = emojiOnly && isDesktop;
 
   const logout = () => {
@@ -81,7 +86,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const regex = emojiRegex();
     setInputValue((e.target.value.match(regex) || []).join(''));
-    // setInputValue(e.target.value);
   };
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
@@ -99,9 +103,24 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
 
   useEffect(() => {
     if (isSuccess) {
-      setMessageHistory(data.data);
+      if (!disableInput) {
+        setMessageHistory(data.data);
+      } else {
+        const cleanedMessageHistory = data.data.map(
+          (message: Message, i: number, arr: Array<Message>) => {
+            if (i > 0 && message.user === arr[i - 1].user) {
+              console.log(message, i, arr[i - 1].user);
+              return { ...message, user: null };
+            } else {
+              return message;
+            }
+          },
+        );
+        console.log(cleanedMessageHistory);
+        setMessageHistory(cleanedMessageHistory);
+      }
     }
-  }, [isSuccess, data]);
+  }, [isSuccess, data, disableInput]);
 
   useEffect(() => {
     if (messageRef.current !== null) {
@@ -149,17 +168,19 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
         ref={messageRef}
       >
         {messageHistory.map((message) => (
-          // {message.user === 'user' && message.user}
-          <Card
+          <div
             key={message.id}
             className={
               message.user === 'me'
-                ? 'max-w-7/10 self-end px-3 py-2 wrap-break-word'
-                : 'max-w-7/10 self-start px-3 py-2 wrap-break-word'
+                ? 'max-w-7/10 self-end'
+                : 'max-w-7/10 self-start'
             }
           >
-            {message.content}
-          </Card>
+            {disableInput && message.user && (
+              <p className='pb-1'>{message.user}</p>
+            )}
+            <Card className='px-3 py-2 wrap-break-word'>{message.content}</Card>
+          </div>
         ))}
       </div>
       <form
@@ -173,7 +194,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
             placeholder='Emojis only'
             value={inputValue}
             className='resize-none !text-xl'
-            rows={1}
+            rows={2}
           />
         ) : (
           <Textarea
@@ -181,9 +202,10 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
             placeholder='Type message'
             className='resize-none'
             rows={2}
+            disabled={disableInput}
           />
         )}
-        <Button size='icon' className='self-end'>
+        <Button size='icon' className='self-end' disabled={disableInput}>
           <Send />
         </Button>
       </form>

@@ -17,9 +17,11 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
     const body = { password: formData.get('password') };
     try {
       const response = await axios.post(`${httpUrl}/login`, body);
+      console.log(response.data);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', response.data.name);
       localStorage.setItem('emojiOnly', response.data.emojiOnly);
+      localStorage.setItem('disableInput', response.data.disableInput);
       setIsLoggedIn(true);
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
