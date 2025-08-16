@@ -33,10 +33,12 @@ interface Message {
   content: string;
   user: string;
   displayName?: boolean;
+  displayOnlineStatus?: boolean;
 }
 
 const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
+  const [onlineStatus, setOnlineStatus] = useState<boolean | null>(null);
   const [inputValue, setInputValue] = useState<string>('');
   const { isPending, isError, isSuccess, data, error } = useQuery({
     queryKey: ['messages'],
@@ -95,13 +97,27 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   useEffect(() => {
     if (lastMessage !== null) {
       const messageData = JSON.parse(lastMessage.data);
-      setMessageHistory((messageHistory) => {
-        const prevMessage = messageHistory.at(-1);
-        if (prevMessage?.user === messageData.user) {
-          return [...messageHistory, { ...messageData, displayName: false }];
-        }
-        return [...messageHistory, { ...messageData, displayName: true }];
-      });
+      if (messageData.online !== undefined) {
+        console.log(messageData);
+        setMessageHistory((messageHistory) => {
+          const onlineMessage: Message = {
+            id: uuid(),
+            displayOnlineStatus: true,
+            displayName: false,
+            user: messageData.user,
+            content: `${messageData.user} is online!`,
+          };
+          return [...messageHistory, onlineMessage];
+        });
+      } else {
+        setMessageHistory((messageHistory) => {
+          const prevMessage = messageHistory.at(-1);
+          if (prevMessage?.user === messageData.user) {
+            return [...messageHistory, { ...messageData, displayName: false }];
+          }
+          return [...messageHistory, { ...messageData, displayName: true }];
+        });
+      }
     }
   }, [lastMessage]);
 
@@ -181,7 +197,13 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
             {disableInput && message.displayName && (
               <p className='pb-1'>{message.user}</p>
             )}
-            <Card className='px-3 py-2 wrap-break-word'>{message.content}</Card>
+            {message.displayOnlineStatus ? (
+              <p>{message.content}</p>
+            ) : (
+              <Card className='px-3 py-2 wrap-break-word'>
+                {message.content}
+              </Card>
+            )}
           </div>
         ))}
       </div>
