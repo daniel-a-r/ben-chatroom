@@ -38,7 +38,6 @@ interface Message {
 
 const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
-  const [onlineStatus, setOnlineStatus] = useState<boolean | null>(null);
   const [inputValue, setInputValue] = useState<string>('');
   const { isPending, isError, isSuccess, data, error } = useQuery({
     queryKey: ['messages'],
