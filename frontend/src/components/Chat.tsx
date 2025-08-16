@@ -32,6 +32,7 @@ interface Message {
   id: string;
   content: string;
   user: string;
+  displayName?: boolean;
 }
 
 const Chat = ({ setIsLoggedIn }: ChatProps) => {
@@ -58,7 +59,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const disableInput: boolean = JSON.parse(
     localStorage.getItem('disableInput')!,
   );
-  console.log('disable input:', disableInput);
   const displayEmojiPicker = emojiOnly && isDesktop;
 
   const logout = () => {
@@ -93,11 +93,15 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   };
 
   useEffect(() => {
-    console.log(lastMessage);
     if (lastMessage !== null) {
       const messageData = JSON.parse(lastMessage.data);
-      console.log(messageData);
-      setMessageHistory((messageHistory) => [...messageHistory, messageData]);
+      setMessageHistory((messageHistory) => {
+        const prevMessage = messageHistory.at(-1);
+        if (prevMessage?.user === messageData.user) {
+          return [...messageHistory, { ...messageData, displayName: false }];
+        }
+        return [...messageHistory, { ...messageData, displayName: true }];
+      });
     }
   }, [lastMessage]);
 
@@ -109,14 +113,12 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
         const cleanedMessageHistory = data.data.map(
           (message: Message, i: number, arr: Array<Message>) => {
             if (i > 0 && message.user === arr[i - 1].user) {
-              console.log(message, i, arr[i - 1].user);
-              return { ...message, user: null };
+              return { ...message, displayName: false };
             } else {
-              return message;
+              return { ...message, displayName: true };
             }
           },
         );
-        console.log(cleanedMessageHistory);
         setMessageHistory(cleanedMessageHistory);
       }
     }
@@ -176,7 +178,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
                 : 'max-w-7/10 self-start'
             }
           >
-            {disableInput && message.user && (
+            {disableInput && message.displayName && (
               <p className='pb-1'>{message.user}</p>
             )}
             <Card className='px-3 py-2 wrap-break-word'>{message.content}</Card>
