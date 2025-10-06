@@ -36,10 +36,10 @@ const root: FastifyPluginAsync = async (fastify, _opts): Promise<void> => {
       let name: string;
 
       switch (password) {
-        case 'pass1':
+        case 'tip2toe':
           name = 'SHANNON';
           break;
-        case 'pass2':
+        case 'CuriousMonkey':
           name = 'CAT';
           break;
         case 'pass3':
