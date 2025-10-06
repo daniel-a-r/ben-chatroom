@@ -214,7 +214,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
           <Textarea
             name='message'
             onChange={handleInputChange}
-            placeholder='Emojis only'
+            placeholder='A picture is worth a thousand words?'
             value={inputValue}
             className='resize-none !text-xl'
             rows={2}
