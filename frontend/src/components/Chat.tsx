@@ -12,7 +12,6 @@ import useWebSocket from 'react-use-websocket';
 import { v4 as uuid } from 'uuid';
 import { Send } from 'lucide-react';
 import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react';
-import { isDesktop } from 'react-device-detect';
 import emojiRegex from 'emoji-regex-xs';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -60,7 +59,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const disableInput: boolean = JSON.parse(
     localStorage.getItem('disableInput')!,
   );
-  const displayEmojiPicker = emojiOnly && isDesktop;
+  const displayEmojiPicker = emojiOnly;
 
   const logout = () => {
     localStorage.clear();
@@ -214,7 +213,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
           <Textarea
             name='message'
             onChange={handleInputChange}
-            placeholder='A picture is worth a thousand words?'
+            placeholder='A picture is worth a thousand words...'
             value={inputValue}
             className='resize-none !text-xl'
             rows={2}
