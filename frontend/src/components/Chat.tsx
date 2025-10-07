@@ -11,17 +11,23 @@ import axios from 'axios';
 import useWebSocket from 'react-use-websocket';
 import { v4 as uuid } from 'uuid';
 import { Send } from 'lucide-react';
-import EmojiPicker, { type EmojiClickData } from 'emoji-picker-react';
 import emojiRegex from 'emoji-regex-xs';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import {
+  EmojiPicker,
+  EmojiPickerSearch,
+  EmojiPickerContent,
+  EmojiPickerFooter,
+} from '@/components/ui/emoji-picker';
 import { Textarea } from '@/components/ui/textarea';
 import { httpUrl, wsUrl } from '@/lib/urls';
+import type { Emoji } from 'frimousse';
 
 interface ChatProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -88,8 +94,8 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     setInputValue((e.target.value.match(regex) || []).join(''));
   };
 
-  const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setInputValue((prev) => prev + emojiData.emoji);
+  const handleEmojiSelect = ({ emoji }: Emoji) => {
+    setInputValue((prev) => prev + emoji);
   };
 
   useEffect(() => {
@@ -160,16 +166,23 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     <div className='grid h-full grid-rows-[min-content_1fr_min-content] gap-4'>
       <div className='flex'>
         {displayEmojiPicker && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Popover>
+            <PopoverTrigger asChild>
               <Button className='text-lg' variant='secondary'>
                 Emoji Picker
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='start'>
-              <EmojiPicker onEmojiClick={handleEmojiClick} />
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </PopoverTrigger>
+            <PopoverContent align='start' className='w-fit p-0'>
+              <EmojiPicker
+                className='h-[22rem]'
+                onEmojiSelect={handleEmojiSelect}
+              >
+                <EmojiPickerSearch />
+                <EmojiPickerContent />
+                <EmojiPickerFooter />
+              </EmojiPicker>
+            </PopoverContent>
+          </Popover>
         )}
         <Button
           onClick={logout}
