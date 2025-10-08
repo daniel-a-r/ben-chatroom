@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import { useEffect, useState, type Dispatch, type SetStateAction } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import useWebSocket from 'react-use-websocket';
@@ -39,7 +33,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     },
   });
 
-  const messageRef = useRef<HTMLDivElement>(null);
   const emojiOnly: boolean = JSON.parse(localStorage.getItem('emojiOnly')!);
   const disableInput: boolean = JSON.parse(
     localStorage.getItem('disableInput')!,
@@ -97,15 +90,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     }
   }, [isSuccess, data, disableInput]);
 
-  useEffect(() => {
-    if (messageRef.current !== null) {
-      messageRef.current.scroll({
-        behavior: 'smooth',
-        top: messageRef.current.scrollHeight,
-      });
-    }
-  }, [messageHistory]);
-
   if (isPending) {
     return <span>Loading...</span>;
   }
@@ -129,7 +113,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
       </div>
       <MessageHistory
         disableInput={disableInput}
-        messageRef={messageRef}
         messageHistory={messageHistory}
       />
       <MessageForm

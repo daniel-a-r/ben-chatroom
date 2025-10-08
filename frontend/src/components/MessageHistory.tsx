@@ -1,18 +1,27 @@
 import { Card } from '@/components/ui/card';
-import type { Ref } from 'react';
+import { useEffect, useRef } from 'react';
 import type { Message } from '@/components/types/components';
 
 interface MessageHistoryProps {
-  messageRef: Ref<HTMLDivElement>;
   disableInput: boolean;
   messageHistory: Message[];
 }
 
 const MessageHistory = ({
-  messageRef,
   disableInput,
   messageHistory,
 }: MessageHistoryProps) => {
+  const messageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messageRef.current !== null) {
+      messageRef.current.scroll({
+        behavior: 'smooth',
+        top: messageRef.current.scrollHeight,
+      });
+    }
+  }, [messageHistory]);
+
   return (
     <div
       className='flex h-full flex-col gap-3 overflow-y-auto'
