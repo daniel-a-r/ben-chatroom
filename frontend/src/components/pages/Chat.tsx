@@ -14,20 +14,9 @@ import { Send } from 'lucide-react';
 import emojiRegex from 'emoji-regex-xs';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import {
-  EmojiPicker,
-  EmojiPickerSearch,
-  EmojiPickerContent,
-  EmojiPickerFooter,
-} from '@/components/ui/emoji-picker';
 import { Textarea } from '@/components/ui/textarea';
+import EmojiPicker from '@/components/EmojiPicker';
 import { httpUrl, wsUrl } from '@/lib/urls';
-import type { Emoji } from 'frimousse';
 
 interface ChatProps {
   setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
@@ -92,10 +81,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const handleInputChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     const regex = emojiRegex();
     setInputValue((e.target.value.match(regex) || []).join(''));
-  };
-
-  const handleEmojiSelect = ({ emoji }: Emoji) => {
-    setInputValue((prev) => prev + emoji);
   };
 
   useEffect(() => {
@@ -165,25 +150,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   return (
     <div className='grid h-full grid-rows-[min-content_1fr_min-content] gap-4'>
       <div className='flex'>
-        {displayEmojiPicker && (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button className='text-lg' variant='secondary'>
-                Emoji Picker
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent align='start' className='w-fit p-0'>
-              <EmojiPicker
-                className='h-[22rem]'
-                onEmojiSelect={handleEmojiSelect}
-              >
-                <EmojiPickerSearch />
-                <EmojiPickerContent />
-                <EmojiPickerFooter />
-              </EmojiPicker>
-            </PopoverContent>
-          </Popover>
-        )}
+        {displayEmojiPicker && <EmojiPicker setInputValue={setInputValue} />}
         <Button
           onClick={logout}
           className='ml-auto text-lg'
