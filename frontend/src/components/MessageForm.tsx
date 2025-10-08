@@ -14,8 +14,7 @@ interface MessageFormProps {
   emojiOnly: boolean;
   disableInput: boolean;
   sendMessage: SendMessage;
-  isPending: boolean;
-  isError: boolean;
+  isSuccess: boolean;
 }
 
 const MessageForm = ({
@@ -25,8 +24,7 @@ const MessageForm = ({
   emojiOnly,
   disableInput,
   sendMessage,
-  isPending,
-  isError,
+  isSuccess,
 }: MessageFormProps) => {
   const handleSendMessage = (formData: FormData) => {
     const message = String(formData.get('message'));
@@ -65,7 +63,7 @@ const MessageForm = ({
           value={inputValue}
           className='resize-none !text-xl'
           rows={2}
-          disabled={isPending || isError}
+          disabled={!isSuccess}
         />
       ) : (
         <Textarea
@@ -73,13 +71,13 @@ const MessageForm = ({
           placeholder='Type message'
           className='resize-none'
           rows={2}
-          disabled={disableInput || isPending || isError}
+          disabled={disableInput || !isSuccess}
         />
       )}
       <Button
         size='icon'
         className='self-end'
-        disabled={disableInput || isPending || isError}
+        disabled={disableInput || !isSuccess}
       >
         <Send />
       </Button>

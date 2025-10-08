@@ -47,7 +47,9 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   return (
     <div className='grid h-full grid-rows-[min-content_1fr_min-content] gap-4'>
       <div className='flex'>
-        {emojiOnly && <EmojiPicker setInputValue={setInputValue} />}
+        {emojiOnly && (
+          <EmojiPicker setInputValue={setInputValue} isSuccess={isSuccess} />
+        )}
         <Button
           onClick={logout}
           className='ml-auto text-lg'
@@ -74,8 +76,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
         sendMessage={sendMessage}
         setInputValue={setInputValue}
         setMessageHistory={setMessageHistory}
-        isPending={isPending}
-        isError={isError}
+        isSuccess={isSuccess}
       />
     </div>
   );

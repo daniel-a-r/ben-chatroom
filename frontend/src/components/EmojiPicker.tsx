@@ -15,11 +15,17 @@ import type { Dispatch, SetStateAction } from 'react';
 
 interface EmojiPickerProps {
   setInputValue: Dispatch<SetStateAction<string>>;
+  isSuccess: boolean;
 }
 
-const EmojiPickerComponent = ({ setInputValue }: EmojiPickerProps) => {
+const EmojiPickerComponent = ({
+  setInputValue,
+  isSuccess,
+}: EmojiPickerProps) => {
   const handleEmojiSelect = ({ emoji }: Emoji) => {
-    setInputValue((prev) => prev + emoji);
+    if (isSuccess) {
+      setInputValue((prev) => prev + emoji);
+    }
   };
 
   return (
