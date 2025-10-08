@@ -1,13 +1,16 @@
 import { Card } from '@/components/ui/card';
 import { useEffect, useRef, type Dispatch, type SetStateAction } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { httpUrl } from '@/lib/urls';
 import { v4 as uuid } from 'uuid';
 import type { Message } from '@/components/types/components';
 import { LoaderCircle, CircleX } from 'lucide-react';
+import type { AxiosResponse } from 'axios';
 
 interface MessageHistoryProps {
+  isPending: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+  data: AxiosResponse | undefined;
+  error: Error | null;
   disableInput: boolean;
   messageHistory: Message[];
   lastMessage: MessageEvent | null;
@@ -15,23 +18,17 @@ interface MessageHistoryProps {
 }
 
 const MessageHistory = ({
+  isPending,
+  isError,
+  isSuccess,
+  data,
+  error,
   disableInput,
   messageHistory,
   lastMessage,
   setMessageHistory,
 }: MessageHistoryProps) => {
   const messageRef = useRef<HTMLDivElement>(null);
-
-  const { isPending, isError, isSuccess, data, error } = useQuery({
-    queryKey: ['messages'],
-    queryFn: () => {
-      return axios.get(`${httpUrl}/history`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-    },
-  });
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -61,19 +58,21 @@ const MessageHistory = ({
 
   useEffect(() => {
     if (isSuccess) {
-      if (!disableInput) {
+      if (!disableInput && data) {
         setMessageHistory(data.data);
       } else {
-        const cleanedMessageHistory = data.data.map(
-          (message: Message, i: number, arr: Array<Message>) => {
-            if (i > 0 && message.user === arr[i - 1].user) {
-              return { ...message, displayName: false };
-            } else {
-              return { ...message, displayName: true };
-            }
-          },
-        );
-        setMessageHistory(cleanedMessageHistory);
+        if (data) {
+          const cleanedMessageHistory = data.data.map(
+            (message: Message, i: number, arr: Array<Message>) => {
+              if (i > 0 && message.user === arr[i - 1].user) {
+                return { ...message, displayName: false };
+              } else {
+                return { ...message, displayName: true };
+              }
+            },
+          );
+          setMessageHistory(cleanedMessageHistory);
+        }
       }
     }
   }, [isSuccess, data, disableInput, setMessageHistory]);
