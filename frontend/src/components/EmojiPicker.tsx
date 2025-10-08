@@ -23,15 +23,13 @@ const EmojiPickerComponent = ({
   isSuccess,
 }: EmojiPickerProps) => {
   const handleEmojiSelect = ({ emoji }: Emoji) => {
-    if (isSuccess) {
-      setInputValue((prev) => prev + emoji);
-    }
+    setInputValue((prev) => prev + emoji);
   };
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button className='text-lg' variant='secondary'>
+        <Button className='text-lg' variant='secondary' disabled={!isSuccess}>
           Emoji Picker
         </Button>
       </PopoverTrigger>
