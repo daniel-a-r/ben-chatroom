@@ -1,17 +1,81 @@
 import { Card } from '@/components/ui/card';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, type Dispatch, type SetStateAction } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+import { httpUrl } from '@/lib/urls';
+import { v4 as uuid } from 'uuid';
 import type { Message } from '@/components/types/components';
 
 interface MessageHistoryProps {
   disableInput: boolean;
   messageHistory: Message[];
+  lastMessage: MessageEvent | null;
+  setMessageHistory: Dispatch<SetStateAction<Message[]>>;
 }
 
 const MessageHistory = ({
   disableInput,
   messageHistory,
+  lastMessage,
+  setMessageHistory,
 }: MessageHistoryProps) => {
   const messageRef = useRef<HTMLDivElement>(null);
+
+  const { isPending, isError, isSuccess, data, error } = useQuery({
+    queryKey: ['messages'],
+    queryFn: () => {
+      return axios.get(`${httpUrl}/history`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (lastMessage !== null) {
+      const messageData = JSON.parse(lastMessage.data);
+      if (messageData.online !== undefined) {
+        setMessageHistory((messageHistory) => {
+          const onlineMessage: Message = {
+            id: uuid(),
+            displayOnlineStatus: true,
+            displayName: false,
+            user: messageData.user,
+            content: `${messageData.user} is online!`,
+          };
+          return [...messageHistory, onlineMessage];
+        });
+      } else {
+        setMessageHistory((messageHistory) => {
+          const prevMessage = messageHistory.at(-1);
+          if (prevMessage?.user === messageData.user) {
+            return [...messageHistory, { ...messageData, displayName: false }];
+          }
+          return [...messageHistory, { ...messageData, displayName: true }];
+        });
+      }
+    }
+  }, [lastMessage, setMessageHistory]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      if (!disableInput) {
+        setMessageHistory(data.data);
+      } else {
+        const cleanedMessageHistory = data.data.map(
+          (message: Message, i: number, arr: Array<Message>) => {
+            if (i > 0 && message.user === arr[i - 1].user) {
+              return { ...message, displayName: false };
+            } else {
+              return { ...message, displayName: true };
+            }
+          },
+        );
+        setMessageHistory(cleanedMessageHistory);
+      }
+    }
+  }, [isSuccess, data, disableInput, setMessageHistory]);
 
   useEffect(() => {
     if (messageRef.current !== null) {
@@ -21,6 +85,15 @@ const MessageHistory = ({
       });
     }
   }, [messageHistory]);
+
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    console.error(error);
+    return <span>Error!</span>;
+  }
 
   return (
     <div
