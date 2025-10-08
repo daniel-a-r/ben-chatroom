@@ -48,7 +48,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     if (lastMessage !== null) {
       const messageData = JSON.parse(lastMessage.data);
       if (messageData.online !== undefined) {
-        console.log(messageData);
         setMessageHistory((messageHistory) => {
           const onlineMessage: Message = {
             id: uuid(),
@@ -95,7 +94,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   }
 
   if (isError) {
-    console.log(error);
+    console.error(error);
     return <span>Error!</span>;
   }
 

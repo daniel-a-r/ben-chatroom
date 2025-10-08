@@ -13,11 +13,9 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const login = async (formData: FormData) => {
-    console.log('formData: ', formData);
     const body = { password: formData.get('password') };
     try {
       const response = await axios.post(`${httpUrl}/login`, body);
-      console.log(response.data);
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', response.data.name);
       localStorage.setItem('emojiOnly', response.data.emojiOnly);
