@@ -25,7 +25,6 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   const disableInput: boolean = JSON.parse(
     localStorage.getItem('disableInput')!,
   );
-  const displayEmojiPicker = emojiOnly;
 
   const logout = () => {
     localStorage.clear();
@@ -35,7 +34,7 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
   return (
     <div className='grid h-full grid-rows-[min-content_1fr_min-content] gap-4'>
       <div className='flex'>
-        {displayEmojiPicker && <EmojiPicker setInputValue={setInputValue} />}
+        {emojiOnly && <EmojiPicker setInputValue={setInputValue} />}
         <Button
           onClick={logout}
           className='ml-auto text-lg'
