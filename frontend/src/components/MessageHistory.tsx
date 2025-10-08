@@ -5,6 +5,7 @@ import axios from 'axios';
 import { httpUrl } from '@/lib/urls';
 import { v4 as uuid } from 'uuid';
 import type { Message } from '@/components/types/components';
+import { LoaderCircle, CircleX } from 'lucide-react';
 
 interface MessageHistoryProps {
   disableInput: boolean;
@@ -86,13 +87,32 @@ const MessageHistory = ({
     }
   }, [messageHistory]);
 
+  const twClassName = 'flex flex-col justify-center items-center';
+  const queryTextCN = 'text-base font-medium';
+  const strokeWidth = 2;
+  const iconSize = 26;
+
   if (isPending) {
-    return <span>Loading...</span>;
+    return (
+      <div className={twClassName}>
+        <p className={queryTextCN}>Loading</p>
+        <LoaderCircle
+          className='animate-spin'
+          strokeWidth={strokeWidth}
+          size={iconSize}
+        />
+      </div>
+    );
   }
 
   if (isError) {
     console.error(error);
-    return <span>Error!</span>;
+    return (
+      <div className={twClassName}>
+        <p className={queryTextCN}>Error</p>
+        <CircleX strokeWidth={strokeWidth} size={iconSize} />
+      </div>
+    );
   }
 
   return (
