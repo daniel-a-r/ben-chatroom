@@ -96,6 +96,9 @@ importers:
       eslint-config-prettier:
         specifier: ^10.1.8
         version: 10.1.8(eslint@9.31.0(jiti@2.4.2))
+      eslint-plugin-jest-dom:
+        specifier: ^5.5.0
+        version: 5.5.0(@testing-library/dom@10.4.1)(eslint@9.31.0(jiti@2.4.2))
       eslint-plugin-prettier:
         specifier: ^5.5.3
         version: 5.5.3(eslint-config-prettier@10.1.8(eslint@9.31.0(jiti@2.4.2)))(eslint@9.31.0(jiti@2.4.2))(prettier@3.6.2)
@@ -108,6 +111,9 @@ importers:
       eslint-plugin-react-refresh:
         specifier: ^0.4.20
         version: 0.4.20(eslint@9.31.0(jiti@2.4.2))
+      eslint-plugin-testing-library:
+        specifier: ^7.13.3
+        version: 7.13.3(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
       globals:
         specifier: ^16.3.0
         version: 16.3.0
@@ -1463,6 +1469,16 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
+  eslint-plugin-jest-dom@5.5.0:
+    resolution: {integrity: sha512-CRlXfchTr7EgC3tDI7MGHY6QjdJU5Vv2RPaeeGtkXUHnKZf04kgzMPIJUXt4qKCvYWVVIEo9ut9Oq1vgXAykEA==}
+    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0, npm: '>=6', yarn: '>=1'}
+    peerDependencies:
+      '@testing-library/dom': ^8.0.0 || ^9.0.0 || ^10.0.0
+      eslint: ^6.8.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
+    peerDependenciesMeta:
+      '@testing-library/dom':
+        optional: true
+
   eslint-plugin-prettier@5.5.3:
     resolution: {integrity: sha512-NAdMYww51ehKfDyDhv59/eIItUVzU0Io9H2E8nHNGKEeeqlnci+1gCvrHib6EmZdf6GxF+LCV5K7UC65Ezvw7w==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -1493,6 +1509,12 @@ packages:
     engines: {node: '>=4'}
     peerDependencies:
       eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7
+
+  eslint-plugin-testing-library@7.13.3:
+    resolution: {integrity: sha512-STwyXN7GnHulgsfdXVd5iC8fFCJVRQj2AcKtMmQOsA8G4oMnSCOX1p3MjbrDQ9fmwVf5wZy6vboTOTFobWuxOA==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0, pnpm: ^9.14.0}
+    peerDependencies:
+      eslint: ^8.57.0 || ^9.0.0
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -2317,6 +2339,10 @@ packages:
   require-from-string@2.0.2:
     resolution: {integrity: sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw==}
     engines: {node: '>=0.10.0'}
+
+  requireindex@1.2.0:
+    resolution: {integrity: sha512-L9jEkOi3ASd9PYit2cwRfyppc9NoABujTP8/5gFcbERmo5jUoAKovIC3fsF17pkTnGsrByysqX+Kxd2OTNI1ww==}
+    engines: {node: '>=0.10.5'}
 
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -4116,6 +4142,14 @@ snapshots:
     dependencies:
       eslint: 9.31.0(jiti@2.4.2)
 
+  eslint-plugin-jest-dom@5.5.0(@testing-library/dom@10.4.1)(eslint@9.31.0(jiti@2.4.2)):
+    dependencies:
+      '@babel/runtime': 7.28.4
+      eslint: 9.31.0(jiti@2.4.2)
+      requireindex: 1.2.0
+    optionalDependencies:
+      '@testing-library/dom': 10.4.1
+
   eslint-plugin-prettier@5.5.3(eslint-config-prettier@10.1.8(eslint@9.31.0(jiti@2.4.2)))(eslint@9.31.0(jiti@2.4.2))(prettier@3.6.2):
     dependencies:
       eslint: 9.31.0(jiti@2.4.2)
@@ -4154,6 +4188,15 @@ snapshots:
       semver: 6.3.1
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
+
+  eslint-plugin-testing-library@7.13.3(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3):
+    dependencies:
+      '@typescript-eslint/scope-manager': 8.37.0
+      '@typescript-eslint/utils': 8.37.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
+      eslint: 9.31.0(jiti@2.4.2)
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
 
   eslint-scope@8.4.0:
     dependencies:
@@ -4915,6 +4958,8 @@ snapshots:
       set-function-name: 2.0.2
 
   require-from-string@2.0.2: {}
+
+  requireindex@1.2.0: {}
 
   resolve-from@4.0.0: {}
 

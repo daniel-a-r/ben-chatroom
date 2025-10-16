@@ -6,6 +6,8 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import pluginQuery from '@tanstack/eslint-plugin-query';
+import testingLibrary from 'eslint-plugin-testing-library';
+import jestDom from 'eslint-plugin-jest-dom';
 import { defineConfig } from 'eslint/config';
 
 export default defineConfig([
@@ -35,6 +37,11 @@ export default defineConfig([
         { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^ignore' },
       ],
     },
+  },
+  {
+    files: ['**/src/testing/*.test.{ts,tsx}'],
+    ...testingLibrary.configs['flat/react'],
+    ...jestDom.configs['flat/recommended'],
   },
   eslintPluginPrettierRecommended,
 ]);
