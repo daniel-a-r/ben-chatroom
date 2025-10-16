@@ -34,7 +34,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
 
   return (
     <form action={login} className='grid gap-3 md:grid-cols-[min-content_auto]'>
-      <Label htmlFor='password' className='text-lg'>
+      <Label htmlFor='password' aria-label='password' className='text-lg'>
         Password:
       </Label>
       <Input
@@ -42,6 +42,7 @@ const Login = ({ setIsLoggedIn }: LoginProps) => {
         id='password'
         name='password'
         className='text-lg'
+        role='textbox'
         required
       />
       <div className='md:col-start-2'>
