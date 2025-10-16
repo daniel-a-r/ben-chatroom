@@ -40,8 +40,10 @@ export default defineConfig([
   },
   {
     files: ['**/src/testing/*.test.{ts,tsx}'],
-    ...testingLibrary.configs['flat/react'],
-    ...jestDom.configs['flat/recommended'],
+    extends: [
+      testingLibrary.configs['flat/react'],
+      jestDom.configs['flat/recommended'],
+    ],
   },
   eslintPluginPrettierRecommended,
 ]);
