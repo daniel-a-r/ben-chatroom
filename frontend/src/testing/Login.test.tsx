@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 describe('Login component', () => {
   const LoginWrapper = () => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [_isLoggedIn, setIsLoggedIn] = useState(false);
     return <Login setIsLoggedIn={setIsLoggedIn} />;
   };
 
