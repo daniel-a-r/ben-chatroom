@@ -24,6 +24,6 @@ describe('Login component', () => {
 
   it('should render submit button', () => {
     render(<LoginWrapper />);
-    expect(screen.getByText(/login/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
   });
 });
