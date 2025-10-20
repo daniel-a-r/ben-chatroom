@@ -1,19 +1,14 @@
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useState } from 'react';
 import useWebSocket from 'react-use-websocket';
-import { Button } from '@/components/ui/button';
-import EmojiPicker from '@/components/EmojiPicker';
+import Header from '@/components/Header';
 import MessageHistory from '@/components/MessageHistory';
 import MessageForm from '@/components/MessageForm';
 import { httpUrl, wsUrl } from '@/lib/urls';
-import type { Message } from '@/components/types/components';
+import type { Message, PageProps } from '@/components/types/components';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 
-interface ChatProps {
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}
-
-const Chat = ({ setIsLoggedIn }: ChatProps) => {
+const Chat = ({ setIsLoggedIn }: PageProps) => {
   const [messageHistory, setMessageHistory] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -39,25 +34,14 @@ const Chat = ({ setIsLoggedIn }: ChatProps) => {
     localStorage.getItem('disableInput')!,
   );
 
-  const logout = () => {
-    localStorage.clear();
-    setIsLoggedIn(false);
-  };
-
   return (
     <div className='grid h-full grid-rows-[min-content_1fr_min-content] gap-4'>
-      <div className='flex'>
-        {emojiOnly && (
-          <EmojiPicker setInputValue={setInputValue} isSuccess={isSuccess} />
-        )}
-        <Button
-          onClick={logout}
-          className='ml-auto text-lg'
-          variant='secondary'
-        >
-          Logout
-        </Button>
-      </div>
+      <Header
+        setIsLoggedIn={setIsLoggedIn}
+        setInputValue={setInputValue}
+        isSuccess={isSuccess}
+        emojiOnly={emojiOnly}
+      />
       <MessageHistory
         isPending={isPending}
         isError={isError}
