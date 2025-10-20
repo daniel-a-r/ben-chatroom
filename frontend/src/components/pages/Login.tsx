@@ -1,15 +1,12 @@
 import axios from 'axios';
-import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useState } from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { httpUrl } from '@/lib/urls';
+import type { PageProps } from '@/components/types/components';
 
-interface LoginProps {
-  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
-}
-
-const Login = ({ setIsLoggedIn }: LoginProps) => {
+const Login = ({ setIsLoggedIn }: PageProps) => {
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   const login = async (formData: FormData) => {
