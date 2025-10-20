@@ -5,3 +5,7 @@ export interface Message {
   displayName?: boolean;
   displayOnlineStatus?: boolean;
 }
+
+export interface PageProps {
+  setIsLoggedIn: Dispatch<SetStateAction<boolean>>;
+}
