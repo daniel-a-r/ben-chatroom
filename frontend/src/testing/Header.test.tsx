@@ -1,7 +1,6 @@
-import '@testing-library/jest-dom/vitest';
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-// import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event';
 import Header from '@/components/Header';
 import { useState } from 'react';
 
@@ -33,13 +32,14 @@ describe('Header component', () => {
     ).toBeInTheDocument();
   });
 
-  // it('should logout user', async () => {
-  //   const user = userEvent.setup();
+  it('should logout user', async () => {
+    const user = userEvent.setup();
 
-  //   render(<HeaderWrapper emojiOnly={false} />);
-  //   localStorage.setItem('isLoggedIn', JSON.stringify(true));
+    render(<HeaderWrapper emojiOnly={false} />);
+    localStorage.setItem('isLoggedIn', JSON.stringify(true));
 
-  //   const logoutButton = screen.getByRole('button', { name: 'Logout' });
-  //   await user.click(logoutButton);
-  // });
+    const logoutButton = screen.getByRole('button', { name: 'Logout' });
+    await user.click(logoutButton);
+    expect(localStorage.getItem('isLoggedIn')).toBeNull();
+  });
 });

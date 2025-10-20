@@ -27,7 +27,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "composite": true
+    "composite": true,
+    "types": ["@testing-library/jest-dom"]
   },
-  "include": ["src"]
+  "include": ["src", "./vitest.setup.ts"]
 }
