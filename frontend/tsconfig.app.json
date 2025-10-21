@@ -28,7 +28,7 @@
     "noUncheckedSideEffectImports": true,
 
     "composite": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals", "vitest/jsdom", "@testing-library/jest-dom"]
   },
   "include": ["src", "./vitest.setup.ts"]
 }
