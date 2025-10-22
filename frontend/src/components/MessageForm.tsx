@@ -61,7 +61,7 @@ const MessageForm = ({
           onChange={handleInputChange}
           placeholder='A picture is worth a thousand words...'
           value={inputValue}
-          className='resize-none !text-xl'
+          className='resize-none text-xl!'
           rows={2}
           disabled={!isSuccess}
         />
