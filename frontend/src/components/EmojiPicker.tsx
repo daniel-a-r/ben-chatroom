@@ -34,7 +34,7 @@ const EmojiPickerComponent = ({
         </Button>
       </PopoverTrigger>
       <PopoverContent align='start' className='w-fit p-0'>
-        <EmojiPicker className='h-[22rem]' onEmojiSelect={handleEmojiSelect}>
+        <EmojiPicker className='h-88' onEmojiSelect={handleEmojiSelect}>
           <EmojiPickerSearch />
           <EmojiPickerContent />
           <EmojiPickerFooter />
